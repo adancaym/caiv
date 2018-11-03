@@ -626,6 +626,27 @@ class Response extends Message implements ResponseInterface
 	// Output Methods
 	//--------------------------------------------------------------------
 
+    public function sendJson($container = null){
+
+        header('Content-Type: application/json');
+        echo json_encode(
+	        array('body'=>$this->getBody(),
+                  'container' => $container ??  $this->getContainer(),
+                  'url' => $this->getUrls(),
+                )
+        );
+    }
+    public function sendJsonToModal($title=null){
+
+        header('Content-Type: application/json');
+        echo json_encode(
+            array('body'=>$this->getBody(),
+                  'url' => $this->getUrls(),
+                  'title' => $title ?? $this->title ?? '',
+                  'modal' => true,
+            )
+        );
+    }
 	/**
 	 * Sends the output to the browser.
 	 *
@@ -646,7 +667,6 @@ class Response extends Message implements ResponseInterface
 		$this->sendHeaders();
 		$this->sendBody();
 		$this->sendCookies();
-
 		return $this;
 	}
 

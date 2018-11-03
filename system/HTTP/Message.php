@@ -41,6 +41,54 @@ use CodeIgniter\HTTP\Exceptions\HTTPException;
 class Message
 {
 
+    protected $container = '.karym_main_container';
+
+    /**
+     * @return string
+     */
+    public function getContainer(): string
+    {
+        return $this->container;
+    }
+
+    /**
+     * @param string $container
+     */
+    public function setContainer(string $container): void
+    {
+        $this->container = $container;
+    }
+
+    protected $urls = [];
+
+    /**
+     * @return array
+     */
+    public function getUrls(): array
+    {
+        return $this->urls;
+    }
+
+    /**
+     * @param array $urls
+     */
+    public function setUrls($urls,$force = false): void
+    {
+        if (is_array($urls)){
+            foreach ($urls as $url){
+                $arrayUrl['url'] = $url;
+                $arrayUrl['force'] = $force;
+                array_push($this->urls,$arrayUrl);
+            }
+        }
+        else{
+            $arrayUrl['url'] = $urls;
+            $arrayUrl['force'] = $force;
+            array_push($this->urls,$arrayUrl);
+        }
+
+    }
+
 	/**
 	 * List of all HTTP request headers.
 	 *
@@ -74,7 +122,25 @@ class Message
 	 *
 	 * @var string
 	 */
-	protected $body;
+    protected $body;
+
+    protected $title;
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title): void
+    {
+        $this->title = $title;
+    }
 
 	//--------------------------------------------------------------------
 	//--------------------------------------------------------------------

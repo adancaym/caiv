@@ -1,0 +1,6 @@
+.bootbox .modal-header{
+    display: block;
+}
+div.modal-lg.modal-dialog{
+    width: 105%;
+}
