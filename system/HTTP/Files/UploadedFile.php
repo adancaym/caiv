@@ -350,7 +350,7 @@ class UploadedFile extends File implements UploadedFileInterface
 		return $this->guessExtension();
 	}
 
-	public function guessExtension(): string
+	public function guessExtension() : ?string
 	{
 		return \Config\Mimes::guessExtensionFromType($this->getMimeType(), $this->getClientExtension());
 	}
@@ -385,7 +385,7 @@ class UploadedFile extends File implements UploadedFileInterface
 	/**
      * Save the uploaded file to a new location.
      *
-     * By default.upload files are saved in writable/uploads directory. the YYYYMMDD folder
+     * By default, upload files are saved in writable/uploads directory. The YYYYMMDD folder
      * and random file name will be created.
      *
      * @param string $folderName the folder name to writable/uploads directory.

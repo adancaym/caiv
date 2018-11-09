@@ -722,14 +722,14 @@ class Email
 		{
 			if (strpos($file, '://') === false && ! file_exists($file))
 			{
-				$this->setErrorMessage(lang('email.attachmentMissing', [$file]));
+				$this->setErrorMessage(lang('Email.attachmentMissing', [$file]));
 
 				return false;
 			}
 
 			if (! $fp = @fopen($file, 'rb'))
 			{
-				$this->setErrorMessage(lang('email.attachmentUnreadable', [$file]));
+				$this->setErrorMessage(lang('Email.attachmentUnreadable', [$file]));
 
 				return false;
 			}
@@ -773,7 +773,7 @@ class Email
 			if ($this->attachments[$i]['name'][0] === $filename)
 			{
 				$this->attachments[$i]['multipart'] = 'related';
-				$this->attachments[$i]['cid']       = uniqid(basename($this->attachments[$i]['name'][0]).'@');
+				$this->attachments[$i]['cid']       = uniqid(basename($this->attachments[$i]['name'][0]).'@', true);
 
 				return $this->attachments[$i]['cid'];
 			}
@@ -943,7 +943,7 @@ class Email
 	{
 		$from = str_replace(['>', '<'], '', $this->headers['Return-Path']);
 
-		return '<'.uniqid('').strstr($from, '@').'>';
+		return '<'.uniqid('', true).strstr($from, '@').'>';
 	}
 
 	//--------------------------------------------------------------------
@@ -1048,7 +1048,7 @@ class Email
 	{
 		if (! is_array($email))
 		{
-			$this->setErrorMessage(lang('email.mustBeArray'));
+			$this->setErrorMessage(lang('Email.mustBeArray'));
 
 			return false;
 		}
@@ -1057,7 +1057,7 @@ class Email
 		{
 			if (! $this->isValidEmail($val))
 			{
-				$this->setErrorMessage(lang('email.invalidAddress', $val));
+				$this->setErrorMessage(lang('Email.invalidAddress', $val));
 
 				return false;
 			}
@@ -1336,7 +1336,7 @@ class Email
 				}
 				else
 				{
-					$boundary = uniqid('B_ALT_');
+					$boundary = uniqid('B_ALT_', true);
 					$hdr      .= 'Content-Type: multipart/alternative; boundary="'.$boundary.'"';
 
 					$body .= $this->getMimeMessage().$this->newline.$this->newline
@@ -1371,7 +1371,7 @@ class Email
 
 			case 'plain-attach':
 
-				$boundary = uniqid('B_ATC_');
+				$boundary = uniqid('B_ATC_', true);
 				$hdr      .= 'Content-Type: multipart/mixed; boundary="'.$boundary.'"';
 
 				if ($this->getProtocol() === 'mail')
@@ -1392,19 +1392,19 @@ class Email
 				break;
 			case 'html-attach':
 
-				$alt_boundary  = uniqid('B_ALT_');
+				$alt_boundary  = uniqid('B_ALT_', true);
 				$last_boundary = null;
 
 				if ($this->attachmentsHaveMultipart('mixed'))
 				{
-					$atc_boundary  = uniqid('B_ATC_');
+					$atc_boundary  = uniqid('B_ATC_', true);
 					$hdr           .= 'Content-Type: multipart/mixed; boundary="'.$atc_boundary.'"';
 					$last_boundary = $atc_boundary;
 				}
 
 				if ($this->attachmentsHaveMultipart('related'))
 				{
-					$rel_boundary        = uniqid('B_REL_');
+					$rel_boundary        = uniqid('B_REL_', true);
 					$rel_boundary_header = 'Content-Type: multipart/related; boundary="'.$rel_boundary.'"';
 
 					if (isset($last_boundary))
@@ -1790,7 +1790,7 @@ class Email
 
 		if (! isset($this->headers['From']))
 		{
-			$this->setErrorMessage(lang('email.noFrom'));
+			$this->setErrorMessage(lang('Email.noFrom'));
 
 			return false;
 		}
@@ -1805,7 +1805,7 @@ class Email
 		    && ! isset($this->headers['Bcc'])
 		    && ! isset($this->headers['Cc']))
 		{
-			$this->setErrorMessage(lang('email.noRecipients'));
+			$this->setErrorMessage(lang('Email.noRecipients'));
 
 			return false;
 		}
@@ -1940,11 +1940,11 @@ class Email
 
 		if (! $success)
 		{
-			$this->setErrorMessage(lang('email.sendFailure'.($protocol === 'mail' ? 'PHPMail' : ucfirst($protocol))));
+			$this->setErrorMessage(lang('Email.sendFailure'.($protocol === 'mail' ? 'PHPMail' : ucfirst($protocol))));
 			return false;
 		}
 
-		$this->setErrorMessage(lang('email.sent', [$protocol]));
+		$this->setErrorMessage(lang('Email.sent', [$protocol]));
 
 		return true;
 	}
@@ -2042,8 +2042,8 @@ class Email
 
 		if ($status !== 0)
 		{
-			$this->setErrorMessage(lang('email.exitStatus', [$status]));
-			$this->setErrorMessage(lang('email.nosocket'));
+			$this->setErrorMessage(lang('Email.exitStatus', [$status]));
+			$this->setErrorMessage(lang('Email.nosocket'));
 
 			return false;
 		}
@@ -2062,7 +2062,7 @@ class Email
 	{
 		if ($this->SMTPHost === '')
 		{
-			$this->setErrorMessage(lang('email.noHostname'));
+			$this->setErrorMessage(lang('Email.noHostname'));
 
 			return false;
 		}
@@ -2127,7 +2127,7 @@ class Email
 
 		if (strpos($reply, '250') !== 0)
 		{
-			$this->setErrorMessage(lang('email.SMTPError', [$reply]));
+			$this->setErrorMessage(lang('Email.SMTPError', [$reply]));
 
 			return false;
 		}
@@ -2173,7 +2173,7 @@ class Email
 
 		if (! is_resource($this->SMTPConnect))
 		{
-			$this->setErrorMessage(lang('email.SMTPError', [$errno.' '.$errstr]));
+			$this->setErrorMessage(lang('Email.SMTPError', [$errno.' '.$errstr]));
 
 			return false;
 		}
@@ -2190,7 +2190,7 @@ class Email
 
 			if ($crypto !== true)
 			{
-				$this->setErrorMessage(lang('email.SMTPError', $this->getSMTPData()));
+				$this->setErrorMessage(lang('Email.SMTPError', $this->getSMTPData()));
 
 				return false;
 			}
@@ -2264,7 +2264,7 @@ class Email
 
 		if ((int)self::substr($reply, 0, 3) !== $resp)
 		{
-			$this->setErrorMessage(lang('email.SMTPError', [$reply]));
+			$this->setErrorMessage(lang('Email.SMTPError', [$reply]));
 
 			return false;
 		}
@@ -2307,7 +2307,7 @@ class Email
 		}
 		elseif (strpos($reply, '334') !== 0)
 		{
-			$this->setErrorMessage(lang('email.failedSMTPLogin', [$reply]));
+			$this->setErrorMessage(lang('Email.failedSMTPLogin', [$reply]));
 
 			return false;
 		}
@@ -2317,7 +2317,7 @@ class Email
 
 		if (strpos($reply, '334') !== 0)
 		{
-			$this->setErrorMessage(lang('email.SMTPAuthUsername', [$reply]));
+			$this->setErrorMessage(lang('Email.SMTPAuthUsername', [$reply]));
 
 			return false;
 		}
@@ -2327,7 +2327,7 @@ class Email
 
 		if (strpos($reply, '235') !== 0)
 		{
-			$this->setErrorMessage(lang('email.SMTPAuthPassword', [$reply]));
+			$this->setErrorMessage(lang('Email.SMTPAuthPassword', [$reply]));
 
 			return false;
 		}
@@ -2382,7 +2382,7 @@ class Email
 
 		if ($result === false)
 		{
-			$this->setErrorMessage(lang('email.SMTPDataFailure', $data));
+			$this->setErrorMessage(lang('Email.SMTPDataFailure', $data));
 
 			return false;
 		}
