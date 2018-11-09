@@ -25,5 +25,9 @@ class CuentaModel extends Model
 
     protected $useTimestamps = false;
 
+    protected $validationRules    = [];
+    protected $validationMessages = [];
+    protected $skipValidation     = false;
+
 
 }

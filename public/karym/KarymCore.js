@@ -44,11 +44,19 @@ karym = {
         },
         verifyJsonResponse:(response)=>{
 
+
+
             if (!response.ok){
 
                 if (response.status === 404) {
                     karym.util.notFound(response);
                 }
+
+                if (response.status === 500)
+                {
+                    karym.util.internalServerError(response);
+                }
+
 
             }
 
@@ -123,7 +131,21 @@ karym = {
         notFound(response){
             let cadena = response.statusText +' '+response.url;
             karym.elementos.ui.error(cadena);
-            throw new Exception('Error página no encontrada');
+            throw 'Error página no encontrada';
+
+        },
+        internalServerError(response){
+
+            response.json()   // response.json returns a promise, we chose to do nothing with its
+                .then((json) => { // conclusion
+                    const { message, stackTrace } = json;
+                    throw new ServerException(message, stackTrace); // note 1
+                })
+                .catch((error) => {
+                    return Promise.reject(RawException(error)); // note 2
+                });
+
+            throw 'Error del servidor';
         }
     },
     elementos:{
