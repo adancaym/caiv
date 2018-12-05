@@ -1,5 +1,9 @@
 <?php namespace Config;
 
+use App\Libraries\SessionRouter;
+use http\Env\Request;
+
+$classSessionRouter = new SessionRouter();
 /**
  * --------------------------------------------------------------------
  * URI Routing
@@ -73,10 +77,19 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+
+
 $routes->get('/', 'Home::index');
 
-$routes->add('/home_admin', 'Home::admin');
-$routes->add('/saluda', 'Home::saluda');
+if ($classSessionRouter->user != null){
+    $routes->add('/home_admin', 'Home::admin');
+    $routes->add('/saluda', 'Home::saluda');
+}
+else{
+    $routes->add('/register_session', 'Home::registrar');
+    $routes->add('/(:any)', 'Home::login');
+
+}
 
 
 /**

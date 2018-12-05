@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/assets/sb-admin-gh/vendor/bootstrap/css/bootstrap-grid.css">
     <link rel="stylesheet" href="/assets/sb-admin-gh/vendor/bootstrap/css/bootstrap-reboot.css">
     <link rel="stylesheet" href="/assets/sb-admin-gh/css/sb-admin.css">
+    <link rel="stylesheet" href="/assets/css/jquery.jsonview.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link href="/assets/sb-admin-gh/vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
 
@@ -109,6 +110,7 @@
 <script src="/assets/sb-admin-gh/vendor/bootstrap/js/bootstrap.js"></script>
 <script src="/assets/sb-admin-gh/js/sb-admin.js"></script>
 <script src="/assets/js/tools/bootbox.min.js"></script>
+<script src="/assets/js/tools/jquery.jsonview.js"></script>
 
 <script src="/karym/KarymCore.js"></script>
 <script src="/karym/eventsKarym.js"></script>

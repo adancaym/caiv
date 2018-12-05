@@ -6,12 +6,13 @@
  * Time: 04:27 PM
  */
 
-namespace CodeIgniter\Model;
+namespace App\Models;
 
 use CodeIgniter\Model;
 
 class CuentaModel extends Model
 {
+
 
     protected $table      = 'cuenta';
 
@@ -19,15 +20,17 @@ class CuentaModel extends Model
 
     protected $returnType = 'App\Entities\Cuenta';
 
-    protected $useSoftDeletes = false;
+    protected $useSoftDeletes = true;
 
     protected $allowedFields = ['cuenta', 'id_cuenta_padre'];
 
-    protected $useTimestamps = false;
-
+    protected $useTimestamps = true;
     protected $validationRules    = [];
     protected $validationMessages = [];
     protected $skipValidation     = false;
+
+
+
 
 
 }

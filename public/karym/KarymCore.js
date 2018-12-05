@@ -2,7 +2,6 @@ karym = {
     init : ()=>{
 
         karym.util.registrarSW();
-
         karym.request.query(karym.util.getHash());
 
     },
@@ -44,8 +43,6 @@ karym = {
         },
         verifyJsonResponse:(response)=>{
 
-
-
             if (!response.ok){
 
                 if (response.status === 404) {
@@ -58,9 +55,11 @@ karym = {
                 }
 
 
-            }
+            }else{
 
-            return response.json();
+                return response.json();
+
+            }
         },
         callback:(response)=>{
             return response;
@@ -136,31 +135,38 @@ karym = {
         },
         internalServerError(response){
 
-            response.json()   // response.json returns a promise, we chose to do nothing with its
-                .then((json) => { // conclusion
-                    const { message, stackTrace } = json;
-                    throw new ServerException(message, stackTrace); // note 1
-                })
-                .catch((error) => {
-                    return Promise.reject(RawException(error)); // note 2
-                });
+           response.json().then((json)=>{
 
-            throw 'Error del servidor';
+               var visor = $('<div class="container"></div>').JSONView(json).get(0).innerHTML;
+               let cadena = response.statusText +' '+response.url;
+               karym.elementos.ui.error(cadena,visor);
+
+           });
+
+
         }
     },
     elementos:{
-
+        form:function(btn){
+            event.preventDefault();
+            let form = $(btn.target).parent('form')[0];
+            let accion = $(form).attr('action');
+            karym.request.query(accion);
+        },
         link:(element)=>{
 
             var accion = $(element.target).data('action');
 
-            if (typeof accion === 'undefined' ) {
-                accion = $(element.target).attr('href');
+            if (element.target.className!=='prop'){
+                if (typeof accion === 'undefined' ) {
+                    accion = $(element.target).attr('href');
+                }
+                if (accion !== '#') {
+                    event.preventDefault();
+                    karym.request.query(accion);
+                }
             }
-            if (accion !== '#') {
-                event.preventDefault();
-                karym.request.query(accion);
-            }
+
         },
         ui:{
             alert:(mensaje)=>{
@@ -177,12 +183,23 @@ karym = {
                 };
                 bootbox.alert(option);
             },
-            error: (mensaje)=> {
-                var option = {
-                    title: '<div class="text-center text-danger"><i class="fa fa-times mr-4"></i>Error</div> ',
-                    message: '<p class="alert alert-danger text-center">'+mensaje+'</p>'
-                };
+            error: (mensaje,visor)=> {
+                if (typeof visor == "undefined"){
+                    var option = {
+                        title: '<div class="text-center text-danger"><i class="fa fa-times mr-4"></i>Error</div> ',
+                        message: '<p class="alert alert-danger text-center">'+mensaje+'</p>'
+                    };
+                }
+                else{
+                    var option = {
+                        title: '<div class="text-center text-danger"><i class="fa fa-times mr-4"></i>Error</div> ',
+                        message: visor,
+                        size: 'large'
+
+                    };
+                }
                 bootbox.alert(option);
+                throw 'Error Interno';
             },
             warning: (mensaje)=> {
                 var option = {

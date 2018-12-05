@@ -1,7 +1,7 @@
 <?php namespace App\Controllers;
 
 use CodeIgniter\Controller;
-use CodeIgniter\Model\CuentaModel;
+use App\Models\CuentaModel;
 
 
 class Home extends Controller
@@ -13,16 +13,29 @@ class Home extends Controller
 
 	public function admin(){
 
-	    $cuentaModel = new CuentaModel();
-
-       // $data['cuentas'] = $cuentaModel->findAll();
 
 	    $this->response->appendBody(view('home/admin'));
 	    $this->response->sendJson();
     }
 
+    public function login(){
+        $this->response->appendBody(view('home/login'));
+        $this->response->sendJsonToModal('Ingresar');
+
+    }
+
+    public function registrar(){
+        $this->response->appendBody('estoy entrando');
+        $this->response->sendJsonToModal('');
+
+    }
+
     public function saluda(){
-	    $this->response->appendBody(view('home/form'));
+        $cuentaModel = new CuentaModel();
+
+        $data['cuentas'] = $cuentaModel->findAll();
+
+        $this->response->appendBody(view('home/form',$data));
         $this->response->sendJsonToModal();
     }
 	//--------------------------------------------------------------------

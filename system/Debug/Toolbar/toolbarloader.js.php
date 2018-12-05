@@ -1,4 +1,5 @@
 <?php if (ENVIRONMENT != 'testing') : ?>
+
 document.addEventListener('DOMContentLoaded', loadDoc, false);
 
 function loadDoc(time) {
