@@ -9,7 +9,7 @@ class DistinctTest extends \CIUnitTestCase
 
 	//--------------------------------------------------------------------
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 
@@ -24,7 +24,7 @@ class DistinctTest extends \CIUnitTestCase
 
 		$builder->select('country')->distinct();
 
-		$expectedSQL   = "SELECT DISTINCT \"country\" FROM \"user\"";
+		$expectedSQL = 'SELECT DISTINCT "country" FROM "user"';
 
 		$this->assertEquals($expectedSQL, str_replace("\n", ' ', $builder->getCompiledSelect()));
 	}

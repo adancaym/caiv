@@ -5,14 +5,16 @@
  *
  * @package Config
  */
+
 class Database extends \CodeIgniter\Database\Config
 {
 	/**
 	 * The directory that holds the Migrations
 	 * and Seeds directories.
+	 *
 	 * @var string
 	 */
-	public $filesPath = APPPATH.'Database/';
+	public $filesPath = APPPATH . 'Database/';
 
 	/**
 	 * Lets you choose which connection group to
@@ -81,12 +83,12 @@ class Database extends \CodeIgniter\Database\Config
 
 	public function __construct()
 	{
-	    parent::__construct();
+		parent::__construct();
 
 		// Ensure that we always set the database group to 'tests' if
 		// we are currently running an automated test suite, so that
 		// we don't overwrite live data on accident.
-		if (ENVIRONMENT == 'testing')
+		if (ENVIRONMENT === 'testing')
 		{
 			$this->defaultGroup = 'tests';
 
@@ -94,11 +96,11 @@ class Database extends \CodeIgniter\Database\Config
 			// so that we can test against multiple databases.
 			if ($group = getenv('DB'))
 			{
-				if (is_file(TESTPATH.'travis/Database.php'))
+				if (is_file(TESTPATH . 'travis/Database.php'))
 				{
-					require TESTPATH.'travis/Database.php';
+					require TESTPATH . 'travis/Database.php';
 
-					if ( ! empty($dbconfig) && array_key_exists($group, $dbconfig))
+					if (! empty($dbconfig) && array_key_exists($group, $dbconfig))
 					{
 						$this->tests = $dbconfig[$group];
 					}
@@ -108,6 +110,5 @@ class Database extends \CodeIgniter\Database\Config
 	}
 
 	//--------------------------------------------------------------------
-
 
 }

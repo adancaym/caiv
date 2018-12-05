@@ -1,4 +1,3 @@
-####################
 Database Forge Class
 ####################
 
@@ -63,7 +62,7 @@ mechanism for this.
 Adding fields
 =============
 
-Fields are created via an associative array. Within the array you must
+Fields are normally created via an associative array. Within the array you must
 include a 'type' key that relates to the datatype of the field. For
 example, INT, VARCHAR, TEXT, etc. Many datatypes (for example VARCHAR)
 also require a 'constraint' key.
@@ -73,7 +72,7 @@ also require a 'constraint' key.
 	$fields = [
 		'users' => [
 			'type'       => 'VARCHAR',
-			'constraint' => '100',
+			'constraint' => 100,
 		],
 	];
 	// will translate to "users VARCHAR(100)" when the field is added.
@@ -92,25 +91,30 @@ Additionally, the following key/values can be used:
 ::
 
 	$fields = [
-		'blog_id'          => [
+		'id'          => [
 			'type'           => 'INT',
 			'constraint'     => 5,
-			'unsigned'       => TRUE,
-			'auto_increment' => TRUE
+			'unsigned'       => true,
+			'auto_increment' => true
 		],
-		'blog_title'       => [
+		'title'       => [
 			'type'           => 'VARCHAR',
 			'constraint'     => '100',
-			'unique'         => TRUE,
+			'unique'         => true,
 		],
-		'blog_author'      => [
+		'author'      => [
 			'type'           =>'VARCHAR',
-			'constraint'     => '100',
+			'constraint'     => 100,
 			'default'        => 'King of Town',
 		],
-		'blog_description' => [
+		'description' => [
 			'type'           => 'TEXT',
-			'null'           => TRUE,
+			'null'           => true,
+		],
+		'status'      => [
+			'type'           => 'ENUM',
+			'constraint'     => ['publish', 'pending', 'draft'],
+			'default'        => 'pending',
 		],
 	];
 
@@ -132,9 +136,9 @@ string into the field definitions with addField()
 
 	$forge->addField("label varchar(100) NOT NULL DEFAULT 'default label'");
 
-.. note:: Passing raw strings as fields cannot be followed by ``add_key()`` calls on those fields.
+.. note:: Passing raw strings as fields cannot be followed by ``addKey()`` calls on those fields.
 
-.. note:: Multiple calls to add_field() are cumulative.
+.. note:: Multiple calls to addField() are cumulative.
 
 Creating an id field
 --------------------
@@ -320,7 +324,7 @@ Modifying a Column in a Table
 
 **$forge->modifyColumn()**
 
-The usage of this method is identical to ``add_column()``, except it
+The usage of this method is identical to ``addColumn()``, except it
 alters an existing column rather than adding a new one. In order to
 change the name you can add a "name" key into the field defining array.
 

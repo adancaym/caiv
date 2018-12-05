@@ -9,7 +9,7 @@ class EmptyTest extends \CIUnitTestCase
 
 	//--------------------------------------------------------------------
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 
@@ -20,12 +20,12 @@ class EmptyTest extends \CIUnitTestCase
 
 	public function testEmptyWithNoTable()
 	{
-		$builder = new BaseBuilder('jobs', $this->db);
+		$builder                  = new BaseBuilder('jobs', $this->db);
 		$builder->returnDeleteSQL = true;
 
 		$answer = $builder->emptyTable(true);
 
-		$expectedSQL   = "DELETE FROM \"jobs\"";
+		$expectedSQL = 'DELETE FROM "jobs"';
 
 		$this->assertEquals($expectedSQL, str_replace("\n", ' ', $answer));
 	}

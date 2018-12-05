@@ -1,6 +1,7 @@
 <?php
 
 use CodeIgniter\Session\Handlers\FileHandler;
+use CodeIgniter\HTTP\Response;
 use Config\App;
 use Config\Autoload;
 use CodeIgniter\Config\Services;
@@ -17,12 +18,12 @@ use Tests\Support\Session\MockSession;
 /**
  * @backupGlobals enabled
  */
-class CommomFunctionsTest extends \CIUnitTestCase
+class CommonFunctionsTest extends \CIUnitTestCase
 {
 
 	//--------------------------------------------------------------------
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 
@@ -35,9 +36,9 @@ class CommomFunctionsTest extends \CIUnitTestCase
 	{
 		$this->assertEquals(' class="foo" id="bar"', stringify_attributes(['class' => 'foo', 'id' => 'bar']));
 
-		$atts = new stdClass;
+		$atts        = new stdClass;
 		$atts->class = 'foo';
-		$atts->id = 'bar';
+		$atts->id    = 'bar';
 		$this->assertEquals(' class="foo" id="bar"', stringify_attributes($atts));
 
 		$atts = new stdClass;
@@ -52,12 +53,12 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 	public function testStringifyJsAttributes()
 	{
-		$this->assertEquals('width=800,height=600', stringify_attributes(['width' => '800', 'height' => '600'], TRUE));
+		$this->assertEquals('width=800,height=600', stringify_attributes(['width' => '800', 'height' => '600'], true));
 
-		$atts = new stdClass;
-		$atts->width = 800;
+		$atts         = new stdClass;
+		$atts->width  = 800;
 		$atts->height = 600;
-		$this->assertEquals('width=800,height=600', stringify_attributes($atts, TRUE));
+		$this->assertEquals('width=800,height=600', stringify_attributes($atts, true));
 	}
 
 	// ------------------------------------------------------------------------
@@ -101,7 +102,7 @@ class CommomFunctionsTest extends \CIUnitTestCase
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 
 		$response = $this->createMock(\CodeIgniter\HTTP\Response::class);
-		$routes = new \CodeIgniter\Router\RouteCollection(new \Tests\Support\Autoloader\MockFileLocator(new \Config\Autoload()), new \Config\Modules());
+		$routes   = new \CodeIgniter\Router\RouteCollection(new \Tests\Support\Autoloader\MockFileLocator(new \Config\Autoload()), new \Config\Modules());
 		\CodeIgniter\Services::injectMock('response', $response);
 		\CodeIgniter\Services::injectMock('routes', $routes);
 
@@ -122,9 +123,9 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 	public function testView()
 	{
-		$data = [
+		$data     = [
 			'testString' => 'bar',
-			'bar'		 => 'baz',
+			'bar'        => 'baz',
 		];
 		$expected = '<h1>bar</h1>';
 		$this->assertContains($expected, view('\Tests\Support\View\Views\simple', $data, []));
@@ -132,9 +133,9 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 	public function testViewSavedData()
 	{
-		$data = [
+		$data     = [
 			'testString' => 'bar',
-			'bar'		 => 'baz',
+			'bar'        => 'baz',
 		];
 		$expected = '<h1>bar</h1>';
 		$this->assertContains($expected, view('\Tests\Support\View\Views\simple', $data, ['saveData' => true]));
@@ -151,6 +152,15 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 	// ------------------------------------------------------------------------
 
+	public function testEscapeWithDifferentEncodings()
+	{
+		$this->assertEquals('&lt;x', esc('<x', 'html', 'utf-8'));
+		$this->assertEquals('&lt;x', esc('<x', 'html', 'iso-8859-1'));
+		$this->assertEquals('&lt;x', esc('<x', 'html', 'windows-1251'));
+	}
+
+	// ------------------------------------------------------------------------
+
 	public function testEscapeBadContext()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -161,7 +171,7 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 	/**
 	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
+	 * @preserveGlobalState  disabled
 	 */
 	public function testSessionInstance()
 	{
@@ -172,7 +182,7 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 	/**
 	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
+	 * @preserveGlobalState  disabled
 	 */
 	public function testSessionVariable()
 	{
@@ -185,7 +195,7 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 	/**
 	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
+	 * @preserveGlobalState  disabled
 	 */
 	public function testSessionVariableNotThere()
 	{
@@ -224,7 +234,7 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 	public function testInvisibleEncoded()
 	{
-		$this->assertEquals('Javascript', remove_invisible_characters("Java%0cscript", true));
+		$this->assertEquals('Javascript', remove_invisible_characters('Java%0cscript', true));
 	}
 
 	// ------------------------------------------------------------------------
@@ -255,7 +265,7 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 	/**
 	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
+	 * @preserveGlobalState  disabled
 	 */
 	public function testOldInput()
 	{
@@ -263,7 +273,7 @@ class CommomFunctionsTest extends \CIUnitTestCase
 		// setup from RedirectResponseTest...
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 
-		$this->config = new App();
+		$this->config          = new App();
 		$this->config->baseURL = 'http://example.com';
 
 		$this->routes = new RouteCollection(new MockFileLocator(new Autoload()), new \Config\Modules());
@@ -274,8 +284,11 @@ class CommomFunctionsTest extends \CIUnitTestCase
 
 		// setup & ask for a redirect...
 		$_SESSION = [];
-		$_GET = ['foo' => 'bar'];
-		$_POST = ['bar' => 'baz', 'zibble' => serialize('fritz')];
+		$_GET     = ['foo' => 'bar'];
+		$_POST    = [
+			'bar'    => 'baz',
+			'zibble' => serialize('fritz'),
+		];
 
 		$response = new RedirectResponse(new App());
 		$returned = $response->withInput();
@@ -283,6 +296,43 @@ class CommomFunctionsTest extends \CIUnitTestCase
 		$this->assertEquals('bar', old('foo')); // regular parameter
 		$this->assertEquals('doo', old('yabba dabba', 'doo')); // non-existing parameter
 		$this->assertEquals('fritz', old('zibble')); // serialized parameter
+	}
+
+	// Reference: https://github.com/codeigniter4/CodeIgniter4/issues/1492
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState  disabled
+	 */
+	public function testOldInputArray()
+	{
+		$this->injectSessionMock();
+		// setup from RedirectResponseTest...
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+
+		$this->config          = new App();
+		$this->config->baseURL = 'http://example.com';
+
+		$this->routes = new RouteCollection(new MockFileLocator(new Autoload()), new \Config\Modules());
+		Services::injectMock('routes', $this->routes);
+
+		$this->request = new MockIncomingRequest($this->config, new URI('http://example.com'), null, new UserAgent());
+		Services::injectMock('request', $this->request);
+
+		$locations = [
+			'AB' => 'Alberta',
+			'BC' => 'British Columbia',
+			'SK' => 'Saskatchewan',
+		];
+
+		// setup & ask for a redirect...
+		$_SESSION = [];
+		$_GET     = [];
+		$_POST    = ['location' => $locations];
+
+		$response = new RedirectResponse(new App());
+		$returned = $response->withInput();
+
+		$this->assertEquals($locations, old('location'));
 	}
 
 	// ------------------------------------------------------------------------
@@ -305,24 +355,44 @@ class CommomFunctionsTest extends \CIUnitTestCase
 	protected function injectSessionMock()
 	{
 		$defaults = [
-			'sessionDriver' => 'CodeIgniter\Session\Handlers\FileHandler',
-			'sessionCookieName' => 'ci_session',
-			'sessionExpiration' => 7200,
-			'sessionSavePath' => null,
-			'sessionMatchIP' => false,
-			'sessionTimeToUpdate' => 300,
+			'sessionDriver'            => 'CodeIgniter\Session\Handlers\FileHandler',
+			'sessionCookieName'        => 'ci_session',
+			'sessionExpiration'        => 7200,
+			'sessionSavePath'          => null,
+			'sessionMatchIP'           => false,
+			'sessionTimeToUpdate'      => 300,
 			'sessionRegenerateDestroy' => false,
-			'cookieDomain' => '',
-			'cookiePrefix' => '',
-			'cookiePath' => '/',
-			'cookieSecure' => false,
+			'cookieDomain'             => '',
+			'cookiePrefix'             => '',
+			'cookiePath'               => '/',
+			'cookieSecure'             => false,
 		];
 
-		$config = (object)$defaults;
+		$config = (object) $defaults;
 
 		$session = new MockSession(new FileHandler($config, '127.0.0.1'), $config);
 		$session->setLogger(new TestLogger(new Logger()));
 		\CodeIgniter\Config\BaseService::injectMock('session', $session);
+	}
+
+	//--------------------------------------------------------------------
+	// Make sure cookies are set by RedirectResponse this way
+	// See https://github.com/codeigniter4/CodeIgniter4/issues/1393
+	public function testRedirectResponseCookies1()
+	{
+		$login_time = time();
+
+		$response = new Response(new App());
+
+		$routes = service('routes');
+		$routes->add('user/login', 'Auth::verify', ['as' => 'login']);
+
+		$answer1 = redirect()->route('login')
+				->setCookie('foo', 'onething', YEAR)
+				->setCookie('login_time', $login_time, YEAR);
+
+		$this->assertTrue($answer1->hasCookie('foo', 'onething'));
+		$this->assertTrue($answer1->hasCookie('login_time'));
 	}
 
 }

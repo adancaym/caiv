@@ -9,7 +9,7 @@ class TruncateTest extends \CIUnitTestCase
 
 	//--------------------------------------------------------------------
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 
@@ -22,7 +22,7 @@ class TruncateTest extends \CIUnitTestCase
 	{
 		$builder = new BaseBuilder('user', $this->db);
 
-		$expectedSQL   = "TRUNCATE \"user\"";
+		$expectedSQL = 'TRUNCATE "user"';
 
 		$this->assertEquals($expectedSQL, $builder->truncate(true));
 	}

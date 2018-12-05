@@ -1,5 +1,9 @@
+<<<<<<< HEAD:system/Debug/Toolbar/toolbarloader.js.php
 <?php if (ENVIRONMENT != 'testing') : ?>
 
+=======
+<?php if (ENVIRONMENT !== 'testing') : ?>
+>>>>>>> develop:system/Debug/Toolbar/Views/toolbarloader.js.php
 document.addEventListener('DOMContentLoaded', loadDoc, false);
 
 function loadDoc(time) {

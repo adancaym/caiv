@@ -19,7 +19,6 @@ $classSessionRouter = new SessionRouter();
  * In some instances, however, you may want to remap this relationship
  * so that a different class/function is called than the one
  * corresponding to the URL.
- *
  */
 
 // Create a new instance of our RouteCollection class.
@@ -27,9 +26,9 @@ $routes = Services::routes(true);
 
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
-if (file_exists(BASEPATH.'Config/Routes.php'))
+if (file_exists(BASEPATH . 'Config/Routes.php'))
 {
-	require BASEPATH.'Config/Routes.php';
+	require BASEPATH . 'Config/Routes.php';
 }
 
 /**
@@ -105,7 +104,7 @@ else{
  * You will have access to the $routes object within that file without
  * needing to reload it.
  */
-if (file_exists(APPPATH.'Config/'.ENVIRONMENT.'/Routes.php'))
+if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php'))
 {
-	require APPPATH.'Config/'.ENVIRONMENT.'/Routes.php';
+	require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }

@@ -1,4 +1,5 @@
-<?php namespace CodeIgniter\HTTP;
+<?php
+namespace CodeIgniter\HTTP;
 
 use CodeIgniter\Files\Exceptions\FileNotFoundException;
 use DateTime;
@@ -7,6 +8,7 @@ use CodeIgniter\Exceptions\DownloadException;
 
 class DownloadResponseTest extends \CIUnitTestCase
 {
+
 	public function tearDown()
 	{
 		if (isset($_SERVER['HTTP_USER_AGENT']))
@@ -41,7 +43,7 @@ class DownloadResponseTest extends \CIUnitTestCase
 
 		$header = $response->getHeaderLine('Date');
 
-		$this->assertEquals($date->format('D, d M Y H:i:s').' GMT', $header);
+		$this->assertEquals($date->format('D, d M Y H:i:s') . ' GMT', $header);
 	}
 
 	public function testSetLastModifiedWithDateTimeObject()
@@ -55,7 +57,7 @@ class DownloadResponseTest extends \CIUnitTestCase
 
 		$header = $response->getHeaderLine('Last-Modified');
 
-		$this->assertEquals($date->format('D, d M Y H:i:s').' GMT', $header);
+		$this->assertEquals($date->format('D, d M Y H:i:s') . ' GMT', $header);
 	}
 
 	public function testSetLastModifiedWithString()
@@ -191,13 +193,13 @@ class DownloadResponseTest extends \CIUnitTestCase
 		$response->setContentType('application/octet-stream', 'Shift-JIS');
 		$response->buildHeaders();
 
-		$this->assertEquals('attachment; filename="'.mb_convert_encoding('テスト.php', 'Shift-JIS', 'UTF-8').'"; filename*=UTF-8\'\'%E3%83%86%E3%82%B9%E3%83%88.php', $response->getHeaderLine('Content-Disposition'));
+		$this->assertEquals('attachment; filename="' . mb_convert_encoding('テスト.php', 'Shift-JIS', 'UTF-8') . '"; filename*=UTF-8\'\'%E3%83%86%E3%82%B9%E3%83%88.php', $response->getHeaderLine('Content-Disposition'));
 	}
 
 	public function testFileExtensionIsUpperCaseWhenAndroidOSIs2()
 	{
 		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Linux; U; Android 2.0.3; ja-jp; SC-02C Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30';
-		$response = new DownloadResponse('unit-test.php', false);
+		$response                   = new DownloadResponse('unit-test.php', false);
 
 		$response->setFilePath(__FILE__);
 		$response->buildHeaders();
@@ -250,4 +252,54 @@ class DownloadResponseTest extends \CIUnitTestCase
 		$this->expectException(DownloadException::class);
 		$response->sendBody();
 	}
+
+	//--------------------------------------------------------------------
+	public function testGetReason()
+	{
+		$response = new DownloadResponse('unit-test.php', false);
+		$this->assertEquals('OK', $response->getReason());
+	}
+
+	//--------------------------------------------------------------------
+	public function testPretendOutput()
+	{
+		$response = new DownloadResponse('unit-test.php', false);
+		$response->pretend(true);
+
+		$response->setFilePath(__FILE__);
+
+		ob_start();
+		$response->send();
+		$actual = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertSame(file_get_contents(__FILE__), $actual);
+	}
+
+	//--------------------------------------------------------------------
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState  disabled
+	 */
+	public function testRealOutput()
+	{
+		$response = new DownloadResponse('unit-test.php', false);
+		$response->pretend(false);
+		$response->setFilePath(__FILE__);
+
+		// send it
+		ob_start();
+		$response->send();
+
+		$buffer = ob_clean();
+		if (ob_get_level() > 0)
+		{
+			ob_end_clean();
+		}
+
+		// and what actually got sent?
+		$this->assertHeaderEmitted('Content-Length: ' . filesize(__FILE__));
+		$this->assertHeaderEmitted('Date:');
+	}
+
 }
