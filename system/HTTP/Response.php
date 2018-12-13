@@ -669,16 +669,20 @@ class Response extends Message implements ResponseInterface
 	//--------------------------------------------------------------------
 
     public function sendJson($container = null){
-
+        $session = \Config\Services::session();
         header('Content-Type: application/json');
         echo json_encode(
 	        array('body'=>$this->getBody(),
                   'container' => $container ??  $this->getContainer(),
                   'url' => $this->getUrls(),
-                )
+                  'redirect' => $this->getRedirect(),
+                  'menus' => $session->get('menus'),
+                  'dateTable' => $this->getTable(),
+            )
         );
     }
     public function sendJsonToModal($title=null){
+        $session = \Config\Services::session();
 
         header('Content-Type: application/json');
         echo json_encode(
@@ -686,6 +690,18 @@ class Response extends Message implements ResponseInterface
                   'url' => $this->getUrls(),
                   'title' => $title ?? $this->title ?? '',
                   'modal' => true,
+                  'redirect' => $this->getRedirect(),
+                  'menus' => $session->get('menus'),
+                'dateTable' => $this->getTable(),
+
+            )
+        );
+    }
+    public function closeSesion(){
+
+        header('Content-Type: application/json');
+        echo json_encode(
+            array('killSesion'=> true,
             )
         );
     }

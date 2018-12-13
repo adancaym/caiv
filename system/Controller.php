@@ -97,6 +97,118 @@ class Controller
 	 */
 	protected $validator;
 
+	protected $model;
+	protected $params;
+	protected $session;
+
+	public function setEntity($table,$entity){
+	    $this->params['paramsFields'] = array($table => $entity);
+    }
+    public function setEntities($entities,$headers,$fields){
+        $this->params['paramsList'] = array('entidades' => $entities,'headers'=>$headers,'id' => $this->model->primaryKey,'fields' => $fields);
+    }
+
+    public function addParams($array = array()){
+	    $this->params = array_merge($this->params,$array);
+	}
+
+    public function index()
+    {
+
+        $this->setEntities($this->model->all($this->session->cuenta->id_cuenta),$this->model->headers,$this->model->fields);
+
+        $html = view('app/index',$this->params);
+
+        $this->response->setTable($this->model->table);
+        $this->response->appendBody($html);
+
+        $this->response->sendJson();
+
+    }
+
+    public function guardar(){
+
+
+
+        $this->addParams($this->request->getPost());
+
+        if ($this->model->save($this->params)){
+            $this->response->setRedirect($this->model->table);
+            $this->response->appendBody('Se ha guardado con éxito');
+            $this->response->sendJsonToModal();
+        }
+        else{
+            $this->response->appendBody('Ha ocurrido un error por favor intentalo nuevamente');
+            $this->response->sendJsonToModal('Error');
+        }
+
+    }
+
+    public function modificar(){
+
+        $id = $this->request->getPostGet('id') ;
+
+        $entidad = $this->model->find( $id );
+
+        if ($entidad==null || $entidad->id_cuenta != $this->session->user->id_cuenta){
+            $this->response->appendBody('No se ha podido encontrar el registro');
+            $this->response->sendJsonToModal('Error');
+        }else{
+
+            $this->params[$this->model->table] = $entidad;
+
+            $this->response->setRedirect($this->model->table);
+            $this->setEntity($this->model->table,$entidad);
+            $this->agregarCatalogos($this->model->obtenerCatalogos($entidad));
+
+            $html = view($this->model->table.'/form/form'.$this->model->module,$this->params);
+
+            $this->response->appendBody($html);
+
+            $this->response->sendJsonToModal('Actualizar');
+        }
+
+    }
+    public function agregar(){
+
+        $new = new $this->model->returnType;
+
+        $this->setEntity($this->model->table,$new);
+        $this->agregarCatalogos($this->model->obtenerCatalogos($new,$this->session->user->id_cuenta));
+        $html = view($this->model->table.'/form/form'.$this->model->module,$this->params);
+        $this->response->appendBody($html);
+
+        $this->response->sendJsonToModal('Agregar');
+
+    }
+
+    public function eliminar(){
+        $id = $this->request->getPostGet('id') ;
+
+        $entidad = $this->model->find( $id );
+
+        if ($entidad==null || $entidad->id_cuenta != $this->session->user->id_cuenta){
+            $this->response->appendBody('No se ha podido encontrar el registro');
+            $this->response->sendJsonToModal('Error');
+
+        }else{
+            if ($this->model->delete($id)){
+                $this->response->setRedirect($this->model->table);
+                $this->response->appendBody('Se ha eliminado el registro con éxito');
+                $this->response->sendJsonToModal('¡Exito!');
+            }
+            else{
+                $this->response->setRedirect($this->model->table);
+                $this->response->appendBody('No se ha podido eliminar el registro');
+                $this->response->sendJsonToModal('Error');
+            }
+        }
+
+    }
+
+    public function agregarCatalogos($catalogos){
+        $this->params['paramsFields'] = array_merge($this->params['paramsFields'],$catalogos);
+    }
 	//--------------------------------------------------------------------
 
 	/**

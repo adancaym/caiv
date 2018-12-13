@@ -120,7 +120,19 @@ class Entity
 	 *
 	 * @return \CodeIgniter\Entity
 	 */
-	public function fill(array $data)
+
+	public function __call($name, $arguments)
+    {
+        if (strpos($name,'getArray') !== false){
+            $hijo = strtolower(str_replace('getArray','',$name));
+
+            $respuest = $this->mapProperty('id_'. strtolower(get_class($this)));
+            var_dump($respuest);
+        }
+        exit;
+    }
+
+    public function fill(array $data)
 	{
 		foreach ($data as $key => $value)
 		{

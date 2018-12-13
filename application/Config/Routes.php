@@ -1,6 +1,7 @@
 <?php namespace Config;
 
 use App\Libraries\SessionRouter;
+use App\Models\AccionModel;
 use http\Env\Request;
 
 $classSessionRouter = new SessionRouter();
@@ -23,6 +24,8 @@ $classSessionRouter = new SessionRouter();
 
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes(true);
+$modelAccion = new AccionModel();
+
 
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
@@ -80,16 +83,20 @@ $routes->setAutoRoute(true);
 
 $routes->get('/', 'Home::index');
 
-if ($classSessionRouter->user != null){
-    $routes->add('/home_admin', 'Home::admin');
-    $routes->add('/saluda', 'Home::saluda');
+$routes->add('/borrarsesion', 'Home::salir');
+
+if ($classSessionRouter->getUser() != null){
+
+    $menus = $modelAccion->getRutas($classSessionRouter->getUser()->id_cuenta,$classSessionRouter->getUser()->id_usuario);
+    foreach ($menus as $menu){
+        $routes->add($menu->link, $menu->ruta);
+    }
 }
 else{
     $routes->add('/register_session', 'Home::registrar');
     $routes->add('/(:any)', 'Home::login');
 
 }
-
 
 /**
  * --------------------------------------------------------------------

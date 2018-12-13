@@ -36,6 +36,7 @@
  * @filesource
  */
 
+use App\Libraries\SessionRouter;
 use Config\Database;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Pager\Pager;
@@ -73,6 +74,8 @@ class Model
 	 * @var Pager
 	 */
 	public $pager;
+	public $childs;
+	public $parents;
 
 	/**
 	 * Name of database table
@@ -80,6 +83,8 @@ class Model
 	 * @var string
 	 */
 	protected $table;
+
+	protected $module;
 
 	/**
 	 * The table's primary key.
@@ -266,6 +271,11 @@ class Model
 	 */
 	protected $tempData = [];
 
+	public $session;
+
+	protected $headers = array();
+
+	public $selecField;
 	//--------------------------------------------------------------------
 
 	/**
@@ -286,15 +296,34 @@ class Model
 		}
 
 		$this->tempReturnType     = $this->returnType;
+
+		$this->session = new SessionRouter();
+
 		$this->tempUseSoftDeletes = $this->useSoftDeletes;
 
 		if (is_null($validation))
 		{
 			$validation = \Config\Services::validation(null, false);
 		}
-
 		$this->validation = $validation;
 	}
+
+
+    public function all($id_cuenta)
+    {
+
+        $this->builder = $this->db->table($this->table);
+
+        $query =
+            $this->builder->
+                select('*')
+                ->where('id_cuenta',$id_cuenta);
+
+        $result =  $query->get() ;
+        $rows =  $result->getResultObject();
+
+        return $rows;
+    }
 
 	//--------------------------------------------------------------------
 	//--------------------------------------------------------------------
@@ -309,6 +338,47 @@ class Model
 	 *
 	 * @return array|object|null    The resulting row of data, or null.
 	 */
+	public function getForSelect($id_cuenta){
+        $this->builder = $this->db->table($this->table);
+
+        $query =
+            $this->builder->
+                select($this->primaryKey.' as id ,'.$this->selecField.' as value')
+                ->where('id_cuenta',$id_cuenta);
+
+        $result =  $query->get() ;
+
+        $rows =  $result->getResultObject();
+
+        return $rows;
+    }
+
+    public function obtenerCatalogos($entidad,$id_cuenta = null ){
+	    return array();
+    }
+    public function getSelect($id_cuenta,$id=null,$name=null){
+
+	    if ($name == null){
+	        $name = $this->table;
+        }
+	    $rows = $this->getForSelect($id_cuenta);
+
+
+	    $string = '<select class="form-control"  name="'.$name.'">';
+
+	    $string .= '<option>--Selecciona--</option>';
+	    foreach ($rows as $row){
+
+	        $select = $id == $row->id ? 'selected="true"':'';
+
+	        $string .= '<option value="'.$row->id.'" '.$select.' >'.$row->value.'</option>';
+
+	    }
+	    $string .='</select>';
+
+
+	    return $string;
+    }
 	public function find($id = null)
 	{
 		$builder = $this->builder();
@@ -328,7 +398,6 @@ class Model
 		{
 			$row = $builder->where($this->table . '.' . $this->primaryKey, $id)
 					->get();
-
 			$row = $row->getFirstRow($this->tempReturnType);
 		}
 		else
@@ -338,6 +407,7 @@ class Model
 			$row = $row->getResult($this->tempReturnType);
 		}
 
+
 		$row = $this->trigger('afterFind', ['id' => $id, 'data' => $row]);
 
 		$this->tempReturnType     = $this->returnType;
@@ -345,6 +415,8 @@ class Model
 
 		return $row['data'];
 	}
+
+
 
 	//--------------------------------------------------------------------
 
@@ -461,6 +533,10 @@ class Model
 		if (is_object($data) && ! $data instanceof \stdClass)
 		{
 			$data = static::classToArray($data, $this->dateFormat);
+			if (is_array($data))
+    			$data['id_cuenta'] = $this->session->user->id_cuenta;
+			else
+			    $data->id_cuenta = $this->session->user->id_cuenta;
 		}
 
 		if (is_object($data) && isset($data->{$this->primaryKey}))
@@ -1447,7 +1523,7 @@ class Model
 	{
 		$result = null;
 
-		if (method_exists($this->db, $name))
+        if (method_exists($this->db, $name))
 		{
 			$result = $this->db->$name(...$params);
 		}
@@ -1470,6 +1546,10 @@ class Model
 
 		return $this;
 	}
+
+    public function splitAtUpperCase($string) {
+        return preg_split('/(?=[A-Z])/', $string, -1, PREG_SPLIT_NO_EMPTY);
+    }
 
 	//--------------------------------------------------------------------
 }

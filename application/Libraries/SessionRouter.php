@@ -30,7 +30,7 @@ class SessionRouter
     /**
      * @return string|null
      */
-    public function getUser(): ?string
+    public function getUser()
     {
         return $this->user;
     }
@@ -38,7 +38,7 @@ class SessionRouter
     /**
      * @param string|null $user
      */
-    public function setUser(?string $user): void
+    public function setUser($user)
     {
         $this->user = $user;
     }
@@ -46,7 +46,7 @@ class SessionRouter
     /**
      * @return string|null
      */
-    public function getCuenta(): ?string
+    public function getCuenta()
     {
         return $this->cuenta;
     }
@@ -54,7 +54,7 @@ class SessionRouter
     /**
      * @param string|null $cuenta
      */
-    public function setCuenta(?string $cuenta): void
+    public function setCuenta($cuenta)
     {
         $this->cuenta = $cuenta;
     }
@@ -72,7 +72,7 @@ class SessionRouter
     /**
      * @param \CodeIgniter\Session\Session|mixed|null $session
      */
-    public function setSession($session): void
+    public function setSession($session)
     {
         $this->session = $session;
     }

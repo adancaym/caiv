@@ -42,7 +42,9 @@ class Message
 {
 
     protected $container = '.karym_main_container';
+    protected $redirect = '';
 
+    protected $dateTable ='';
     /**
      * @return string
      */
@@ -86,6 +88,17 @@ class Message
             $arrayUrl['force'] = $force;
             array_push($this->urls,$arrayUrl);
         }
+
+    }
+
+    public function getTable()
+    {
+        return $this->dateTable ;
+
+    }
+    public function setTable($table)
+    {
+       $this->dateTable = '#dateTable'.$table;
 
     }
 
@@ -195,7 +208,17 @@ class Message
 		return $this;
 	}
 
-	//--------------------------------------------------------------------
+    public function setRedirect($url)
+    {
+        $this->redirect .= (string) $url;
+        return $this;
+    }
+    public function getRedirect()
+    {
+        return $this->redirect;
+    }
+
+    //--------------------------------------------------------------------
 	//--------------------------------------------------------------------
 	// Headers
 	//--------------------------------------------------------------------

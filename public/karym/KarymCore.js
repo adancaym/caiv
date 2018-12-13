@@ -16,7 +16,6 @@ karym = {
         fetch:(url)=>{
 
             return fetch(url,karym.request.fetchData).then(karym.response.verifyJsonResponse);
-
         },
         fetchData:()=>
         {
@@ -28,11 +27,125 @@ karym = {
                 },
             }
         },
+        form:(form)=>{
+            if(typeof form === 'string')
+            {
+                form = $(form);
+            }
+            let accion = form.attr('action');
+
+            $.ajax	({
+                data: form.serialize(),
+                type: "POST",
+                dataType: "json",
+                url: accion,
+                success: function(data){
+                   karym.response.processData(data);
+                },
+                error:karym.util.error
+            });
+
+        },
+        formFile:(form)=>{
+
+
+            if(typeof form === 'string')
+            {
+                form = $(form);
+            }
+            let accion = form.attr('action');
+            var formData = new FormData(form[0]);
+
+            $.ajax({
+                url: accion,
+                type: 'POST',
+                data: formData,
+                success: function (data) {
+                    karym.response.processData(data);
+                },
+                error:karym.util.error,
+                cache: false,
+                contentType: false,
+                processData: false
+
+            });
+
+        },
         query:(url)=>{
             karym.request.post(url).then(karym.response.processData).catch(karym.util.error);
         }
     },
     response:{
+        table:(response)=>{
+            let nombreTabla = response.dateTable;
+
+            if (nombreTabla!== ''){
+
+                var tabla = $(nombreTabla);
+
+                if (tabla.length >0){
+
+                    tabla.DataTable(
+                        {
+                            "language": {
+                                "url": "/assets/js/tools/datatables/tsconfig.json"
+                            }
+                        }
+
+                    );
+
+                }
+
+            }
+        },
+
+        killSesion:(response)=>{
+            if (response.killSesion){
+                window.location.href = "/";
+
+            }
+        },
+        redirect:(response)=>{
+                if (response.redirect !== ''){
+                    window.location.href = "/#" + response.redirect;
+                }
+        },
+
+        menus:(response)=>{
+            let menus = response.menus;
+            var cadena = '';
+
+            $.each(menus,(index,val)=>{
+
+                if ( val.visible == 1){
+
+                    if (!karym.params.menus.includes(val.nombre)){
+
+
+                        karym.params.menus.push(val.nombre);
+
+
+                        cadena = '<li class="nav-item dropdown">\n' +
+                            '          <a class="nav-link dropdown-toggle" href="#" id="'+val.nombre+'Dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n' +
+                            '            <span>'+val.nombre+'</span>\n' +
+                            '          </a>\n' +
+                            '          <div class="dropdown-menu" aria-labelledby="'+val.nombre+'Dropdown" x-placement="bottom-start" style="position: absolute; transform: translate3d(5px, 56px, 0px); top: 0px; left: 0px; will-change: transform;">\n' ;
+                        $.each(val.submenus, (indexsubmenu, submenu )=>{
+                            if (submenu.visible == 1)
+                                cadena  = cadena + '<a class="dropdown-item" href="#'+ submenu.link +'">'+ submenu.nombre +'</a>\n' ;
+                        });
+                        cadena = cadena +
+                            '          </div>\n' +
+                            '        </li>';
+
+
+                    }
+
+                    $('.sidebar').append(cadena);
+
+                }
+            });
+        },
         responseModal(response){
             var option = {
                 title: response.title,
@@ -55,28 +168,41 @@ karym = {
                 }
 
 
-            }else{
+            }
+            else{
 
+                var pre = response.clone().json();
+
+                if (pre.code === 404){
+                    let cadena = pre.message +' '+pre.title;
+                    karym.elementos.ui.error(cadena);
+                    throw 'Error página no encontrada';
+                }
                 return response.json();
 
             }
         },
-        callback:(response)=>{
+        callKback:(response)=>{
             return response;
         },
         processData:(response)=>{
-            if (response.hasOwnProperty('url')) karym.response.includeUrls(response.url);
+
             if (response.hasOwnProperty('modal')) karym.response.responseModal(response);
-            else if (response.hasOwnProperty('container')) karym.response.fillContainer(response);
+            if (response.hasOwnProperty('menus')) karym.response.menus(response);
+            if (response.hasOwnProperty('redirect')) karym.response.redirect(response);
+            if (response.hasOwnProperty('killSesion')) karym.response.killSesion(response);
+            if (response.hasOwnProperty('container')) karym.response.fillContainer(response);
+            if (response.hasOwnProperty('url')) karym.response.includeUrls(response.url);
+            if (response.hasOwnProperty('dateTable')) karym.response.table(response);
         },
         includeUrls: function(urls,index){
             if(!index){
                 index = 0;
             }
             if(urls && index < urls.length) {
+
                 if (urls[index].forceLoad || $.inArray(urls[index].url, karym.params.urls) === -1) {
                     var url = urls[index].url;
-
                     $.getScript(url,
                         function (data, textStatus, jqxhr) {
                             karym.params.urls.push(url);
@@ -104,6 +230,8 @@ karym = {
           return karym.params.data;
         },
         urls:[],
+        menus:[],
+        btn: null,
     },
     util:{
         log:(response)=>{
@@ -128,9 +256,12 @@ karym = {
             karym.util.hash = hash;
         },
         notFound(response){
-            let cadena = response.statusText +' '+response.url;
-            karym.elementos.ui.error(cadena);
-            throw 'Error página no encontrada';
+            
+            if (typeof  response.statusText !== "undefined"){
+                let cadena = response.statusText +' '+response.url;
+                karym.elementos.ui.error(cadena);
+                throw 'Error página no encontrada';
+            }
 
         },
         internalServerError(response){
@@ -147,22 +278,49 @@ karym = {
         }
     },
     elementos:{
+        delete:function(btn){
+           event.preventDefault();
+           karym.params.btn = btn.target;
+           karym.elementos.ui.confirm('¿Estas seguro que deseas eliminar el registro?',karym.elementos.callbackDelete);
+        },
+        callbackDelete:()=>{
+
+            var $btn = $(karym.params.btn);
+
+            if(typeof $btn === 'string')
+            {
+                $btn = $($btn);
+            }
+
+            let accion = $btn.attr('href');
+
+
+            console.log(accion);
+
+            //console.log(accion);
+
+            window.location.href =accion;
+
+        },
         form:function(btn){
             event.preventDefault();
-            let form = $(btn.target).parent('form')[0];
-            let accion = $(form).attr('action');
-            karym.request.query(accion);
+            let form = $(btn.target).parents('form')[0];
+            karym.request.form($(form));
+        },
+        formFile:function(btn){
+            event.preventDefault();
+            let form = $(btn.target).parents('form')[0];
+            karym.request.formFile($(form));
         },
         link:(element)=>{
-
             var accion = $(element.target).data('action');
 
+            if (typeof accion === 'undefined' ) {
+                accion = $(element.target).attr('href');
+            }
             if (element.target.className!=='prop'){
-                if (typeof accion === 'undefined' ) {
-                    accion = $(element.target).attr('href');
-                }
-                if (accion !== '#') {
-                    event.preventDefault();
+
+                if (accion !== '#' ) {
                     karym.request.query(accion);
                 }
             }
@@ -191,37 +349,49 @@ karym = {
                     };
                 }
                 else{
+
                     var option = {
                         title: '<div class="text-center text-danger"><i class="fa fa-times mr-4"></i>Error</div> ',
                         message: visor,
                         size: 'large'
 
                     };
+
                 }
+
                 bootbox.alert(option);
+
                 throw 'Error Interno';
             },
             warning: (mensaje)=> {
+
                 var option = {
+
                     title: '<div class="text-center text-warning"><i class="fa fa-warning mr-4"></i>Cuidado</div> ',
                     message: '<p class="alert alert-warning text-center">'+mensaje+'</p>'
+
                 };
+
                 bootbox.alert(option);
             },
             confirm:(mensaje,callback)=>{
+
                 var option = {
                     title: '<div class="text-center text-primary">Confirmación<i class="fa fa-question ml-1"></i></div> ',
                     message: '<p class="alert alert-info text-center">'+mensaje+'</p>',
                     callback: callback
                 };
+
                 bootbox.confirm(option);
             },
             responseModal(response){
+
                 var option = {
                     title: response.title,
                     message: response.body,
                     size: 'large'
                 };
+
                 bootbox.alert(option);
             }
         },

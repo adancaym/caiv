@@ -1,6 +1,33 @@
 .bootbox .modal-header{
     display: block;
 }
-div.modal-lg.modal-dialog{
-    width: 105%;
+thead{
+    background: #5e5e5e;
+    color: #fff;
+}
+
+.btn-xs{
+    font-size: .7em;
+    padding: 5px;
+}
+
+footer.sticky-footer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    height: 80px;
+    background-color: #e9ecef;
+}
+
+.page-item.active .page-link {
+    z-index: 0 !important;
+}
+
+@media (max-width: 767px) {
+    .hidden-xs {
+        display: none !important;
+    }
 }

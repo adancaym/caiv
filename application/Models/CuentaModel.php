@@ -20,15 +20,14 @@ class CuentaModel extends Model
 
     protected $returnType = 'App\Entities\Cuenta';
 
-    protected $useSoftDeletes = true;
+    protected $useSoftDeletes = false;
 
     protected $allowedFields = ['cuenta', 'id_cuenta_padre'];
 
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $validationRules    = [];
     protected $validationMessages = [];
     protected $skipValidation     = false;
-
 
 
 

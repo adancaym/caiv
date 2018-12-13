@@ -15,11 +15,11 @@
                         <form action="/register_session">
                             <div class="form-group">
                                 <label for="">Usuario</label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" name="user">
                             </div>
                             <div class="form-group">
                                 <label for="">Contraseña</label>
-                                <input class="form-control" type="password">
+                                <input class="form-control" type="password" name="pass">
                             </div>
                             <input type="submit" class="karym_submit btn btn-info float-right" value="Entrar">
                         </form>
