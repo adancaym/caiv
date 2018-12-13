@@ -430,6 +430,7 @@ class Entity
 
 	/**
 	 * Provides the ability to cast an item as a specific data type.
+	 * Add ? at the beginning of $type  (i.e. ?string) to get NULL instead of castig $value if $value === null
 	 *
 	 * @param $value
 	 * @param string $type
@@ -439,9 +440,12 @@ class Entity
 
 	protected function castAs($value, string $type)
 	{
+		if(substr($type,0,1) === '?' && $value === null) return null;
+
 		switch($type)
 		{
-			case 'integer':
+			case 'int':
+			case 'integer': //alias for 'integer'
 				$value = (int)$value;
 				break;
 			case 'float':
@@ -453,7 +457,8 @@ class Entity
 			case 'string':
 				$value = (string)$value;
 				break;
-			case 'boolean':
+			case 'bool':
+			case 'boolean': //alias for 'boolean'
 				$value = (bool)$value;
 				break;
 			case 'object':
