@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-condensed table-bordered table-hover" id="dateTable<?php echo $table?>">
+    <table class="table table-condensed table-bordered table-hover" id="dateTable<?php echo sizeof($entidades)>0 ? $table:'' ?>">
         <thead>
         <tr>
             <?php
@@ -36,7 +36,7 @@
             <?php } ?>
         <?php } else {?>
             <tr>
-                <td colspan="4" class="text-center">
+                <td colspan="<?= sizeof($headers) +1 ?>" class="text-center">
                     No existen <?php echo $plural?> en el sistema
                 </td>
             </tr>

@@ -145,6 +145,24 @@ class Message
 
     protected $title;
 
+    protected $blob = null;
+
+    /**
+     * @return mixed
+     */
+    public function getBlob()
+    {
+        return $this->blob;
+    }
+
+    /**
+     * @param mixed $blob
+     */
+    public function setBlob($blob)
+    {
+        $this->blob = $blob;
+    }
+
     /**
      * @return mixed
      */

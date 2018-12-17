@@ -25,7 +25,17 @@ karym = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
+
             }
+        },
+        fetchDataBlob:()=>
+        {
+            return {
+                method: 'POST'
+            }
+        },
+        fetchBlob:(url)=>{
+            return fetch(url,karym.request.fetchDataBlob()).then(karym.response.verifyBlobResponse);
         },
         form:(form)=>{
             if(typeof form === 'string')
@@ -61,6 +71,7 @@ karym = {
                 type: 'POST',
                 data: formData,
                 success: function (data) {
+                    data = JSON.parse(data);
                     karym.response.processData(data);
                 },
                 error:karym.util.error,
@@ -76,6 +87,39 @@ karym = {
         }
     },
     response:{
+        blob:(response)=>{
+            if (response.blob !== null) {
+                var blob = karym.response.decodeBase64(response.blob.blob);
+                var name = response.blob.name;
+                var type = response.blob.type;
+                karym.response.save(name,type,blob);
+            }
+        },
+        decodeBase64 : (s)=>{
+            var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
+            var A="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+            for(i=0;i<64;i++){e[A.charAt(i)]=i;}
+            for(x=0;x<L;x++){
+                c=e[s.charAt(x)];b=(b<<6)+c;l+=6;
+                while(l>=8){((a=(b>>>(l-=8))&0xff)||(x<(L-2)))&&(r+=w(a));}
+            }
+            return r;
+        },
+        save:(name, type, blob)=>{
+            if(navigator.msSaveBlob){ // For ie and Edge
+                return navigator.msSaveBlob(blob, name);
+            }
+            else{
+
+                let link = document.createElement('a');
+                link.href = (window.URL || window.webkitURL).createObjectURL( new Blob([blob], {type: type}));
+                link.download = name;
+                document.body.appendChild(link);
+                link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+                link.remove();
+                window.URL.revokeObjectURL(link.href);
+            }
+        },
         table:(response)=>{
             let nombreTabla = response.dateTable;
 
@@ -178,7 +222,34 @@ karym = {
                     karym.elementos.ui.error(cadena);
                     throw 'Error página no encontrada';
                 }
+
                 return response.json();
+
+            }
+        },
+        verifyBlobResponse:(response)=>{
+
+            if (!response.ok){
+
+                if (response.status === 404) {
+                    karym.util.notFound(response);
+                }
+
+                if (response.status === 500)
+                {
+                    karym.util.internalServerError(response);
+                }
+            }
+            else{
+
+                var pre = response.clone().json();
+
+                if (pre.code === 404){
+                    let cadena = pre.message +' '+pre.title;
+                    karym.elementos.ui.error(cadena);
+                    throw 'Error página no encontrada';
+                }
+
 
             }
         },
@@ -186,7 +257,6 @@ karym = {
             return response;
         },
         processData:(response)=>{
-
             if (response.hasOwnProperty('modal')) karym.response.responseModal(response);
             if (response.hasOwnProperty('menus')) karym.response.menus(response);
             if (response.hasOwnProperty('redirect')) karym.response.redirect(response);
@@ -194,6 +264,7 @@ karym = {
             if (response.hasOwnProperty('container')) karym.response.fillContainer(response);
             if (response.hasOwnProperty('url')) karym.response.includeUrls(response.url);
             if (response.hasOwnProperty('dateTable')) karym.response.table(response);
+            if (response.hasOwnProperty('blob')) karym.response.blob(response);
         },
         includeUrls: function(urls,index){
             if(!index){
@@ -278,28 +349,47 @@ karym = {
         }
     },
     elementos:{
+        viewFile:(btn)=>{
+            event.preventDefault();
+
+
+            var $btn = $(btn.target);
+
+            if ($btn.is('a')){
+                var accion = $btn.attr('href');
+            }
+            else{
+                $btn = $btn.parents('a');
+                var accion = $btn.attr('href');
+            }
+
+            karym.request.fetchBlob(accion);
+        },
         delete:function(btn){
            event.preventDefault();
            karym.params.btn = btn.target;
            karym.elementos.ui.confirm('¿Estas seguro que deseas eliminar el registro?',karym.elementos.callbackDelete);
         },
-        callbackDelete:()=>{
+        callbackDelete:(result)=>{
 
-            var $btn = $(karym.params.btn);
-
-            if(typeof $btn === 'string')
+            if (result===true)
             {
-                $btn = $($btn);
+                var $btn = $(karym.params.btn);
+
+                var accion = $btn.attr('href');
+                if  (typeof accion === "undefined"){
+                    $btn = $btn.parents('a');
+                }
+
+                accion = $btn.attr('href');
+
+                console.log(accion);
+
+                //console.log(accion);
+
+                window.location.href =accion;
             }
 
-            let accion = $btn.attr('href');
-
-
-            console.log(accion);
-
-            //console.log(accion);
-
-            window.location.href =accion;
 
         },
         form:function(btn){

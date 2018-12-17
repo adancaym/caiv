@@ -678,6 +678,8 @@ class Response extends Message implements ResponseInterface
                   'redirect' => $this->getRedirect(),
                   'menus' => $session->get('menus'),
                   'dateTable' => $this->getTable(),
+                  'blob' => $this->getBlob(),
+
             )
         );
     }
@@ -692,7 +694,8 @@ class Response extends Message implements ResponseInterface
                   'modal' => true,
                   'redirect' => $this->getRedirect(),
                   'menus' => $session->get('menus'),
-                'dateTable' => $this->getTable(),
+                  'dateTable' => $this->getTable(),
+                  'blob' => $this->getBlob(),
 
             )
         );

@@ -42,7 +42,7 @@ those classes can be found in::
 
 	$psr4 = [
 		'App'         => APPPATH,
-		'CodeIgniter' => SYSTEMPATH,
+		'CodeIgniter' => BASEPATH,
 	];
 
 The key of each row is the namespace itself. This does not need a trailing slash. If you use double-quotes

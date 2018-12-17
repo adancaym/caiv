@@ -176,8 +176,7 @@ class Exceptions
 	 */
 	public function errorHandler(int $severity, string $message, string $file = null, int $line = null, $context = null)
 	{
-		if (! (\error_reporting() & $severity))
-		{
+		if (! (\error_reporting() & $severity)) {
 			return;
 		}
 
@@ -360,9 +359,9 @@ class Exceptions
 		{
 			$file = 'APPPATH/' . substr($file, strlen(APPPATH));
 		}
-		elseif (strpos($file, SYSTEMPATH) === 0)
+		elseif (strpos($file, BASEPATH) === 0)
 		{
-			$file = 'SYSTEMPATH/' . substr($file, strlen(SYSTEMPATH));
+			$file = 'BASEPATH/' . substr($file, strlen(BASEPATH));
 		}
 		elseif (strpos($file, FCPATH) === 0)
 		{

@@ -121,15 +121,13 @@ class Entity
 	 * @return \CodeIgniter\Entity
 	 */
 
-	public function __call($name, $arguments)
-    {
-        if (strpos($name,'getArray') !== false){
-            $hijo = strtolower(str_replace('getArray','',$name));
 
-            $respuest = $this->mapProperty('id_'. strtolower(get_class($this)));
-            var_dump($respuest);
-        }
-        exit;
+    public function obtenerModel(){
+
+    }
+
+    public function getPrimaryKey(){
+	    return  $this->mapProperty('id_'. strtolower(get_class($this)));
     }
 
     public function fill(array $data)

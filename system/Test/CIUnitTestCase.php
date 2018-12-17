@@ -55,6 +55,14 @@ class CIUnitTestCase extends TestCase
 	 */
 	protected $app;
 
+	/**
+	 * Path to Config folder, relative
+	 * to the system folder.
+	 *
+	 * @var string
+	 */
+	protected $configPath = '../application/Config';
+
 	protected function setUp()
 	{
 		parent::setUp();
@@ -228,13 +236,52 @@ class CIUnitTestCase extends TestCase
 	 * Loads up an instance of CodeIgniter
 	 * and gets the environment setup.
 	 *
-	 * @return \CodeIgniter\CodeIgniter
+	 * @return mixed
 	 */
 	protected function createApplication()
 	{
-		$paths = new Paths();
+		$systemPath = realpath(__DIR__ . '/../');
 
-		return require realpath(__DIR__ . '/../') . '/bootstrap.php';
+		require_once $systemPath . '/' . $this->configPath . '/Paths.php';
+		$paths = $this->adjustPaths(new \Config\Paths());
+
+		$app = require $systemPath . '/bootstrap.php';
+		return $app;
+	}
+
+	/**
+	 * Attempts to adjust our system paths to account
+	 * for relative location of our tests folder.
+	 * Not foolproof, but works well for default locations.
+	 *
+	 * @param \Config\Paths $paths
+	 *
+	 * @return \Config\Paths
+	 */
+	protected function adjustPaths(Paths $paths)
+	{
+		$tests = [
+			'systemDirectory',
+			'applicationDirectory',
+			'writableDirectory',
+			'testsDirectory',
+		];
+
+		foreach ($tests as $test)
+		{
+			if (is_dir($paths->$test) || strpos($paths->$test, '../') !== 0)
+			{
+				continue;
+			}
+
+			$check = substr($paths->$test, 3);
+			if (is_dir($check))
+			{
+				$paths->$test = $check;
+			}
+		}
+
+		return $paths;
 	}
 
 	//--------------------------------------------------------------------

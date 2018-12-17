@@ -20,7 +20,7 @@ class FileLocatorTest extends \CIUnitTestCase
 			'Tests/Support' => TESTPATH . '_support/',
 			'App'           => APPPATH,
 			'CodeIgniter'   => [
-				SYSTEMPATH,
+				BASEPATH,
 				TESTPATH,
 			],
 			'Errors'        => APPPATH . 'Views/errors',
@@ -67,7 +67,7 @@ class FileLocatorTest extends \CIUnitTestCase
 	{
 		$file = 'bootstrap';
 
-		$expected = SYSTEMPATH . 'bootstrap.php';
+		$expected = BASEPATH . 'bootstrap.php';
 
 		$this->assertEquals($expected, $this->locator->locateFile($file));
 	}
@@ -167,8 +167,7 @@ class FileLocatorTest extends \CIUnitTestCase
 		$expected = APPPATH . 'index.html';
 		$this->assertContains($expected, $foundFiles);
 
-		$expected = SYSTEMPATH . 'index.html';
-
+		$expected = BASEPATH . 'index.html';
 		$this->assertContains($expected, $foundFiles);
 	}
 
@@ -211,8 +210,8 @@ class FileLocatorTest extends \CIUnitTestCase
 		$expectedLin = APPPATH . 'Filters/DebugToolbar.php';
 		$this->assertTrue(in_array($expectedWin, $files) || in_array($expectedLin, $files));
 
-		$expectedWin = SYSTEMPATH . 'Filters\Filters.php';
-		$expectedLin = SYSTEMPATH . 'Filters/Filters.php';
+		$expectedWin = BASEPATH . 'Filters\Filters.php';
+		$expectedLin = BASEPATH . 'Filters/Filters.php';
 		$this->assertTrue(in_array($expectedWin, $files) || in_array($expectedLin, $files));
 	}
 
@@ -236,7 +235,7 @@ class FileLocatorTest extends \CIUnitTestCase
 
 	public function testFindQNameFromPathSimple()
 	{
-		$ClassName = $this->locator->findQualifiedNameFromPath(SYSTEMPATH . 'HTTP/Header.php');
+		$ClassName = $this->locator->findQualifiedNameFromPath(BASEPATH . 'HTTP/Header.php');
 		$expected  = '\CodeIgniter\HTTP\Header';
 
 		$this->assertEquals($expected, $ClassName);
@@ -268,7 +267,7 @@ class FileLocatorTest extends \CIUnitTestCase
 	{
 		$this->assertEquals(
 			'',
-			$this->locator->getClassname(SYSTEMPATH . 'bootstrap.php')
+			$this->locator->getClassname(BASEPATH . 'bootstrap.php')
 		);
 	}
 

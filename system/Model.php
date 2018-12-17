@@ -354,8 +354,10 @@ class Model
     }
 
     public function obtenerCatalogos($entidad,$id_cuenta = null ){
+
 	    return array();
-    }
+
+	}
     public function getSelect($id_cuenta,$id=null,$name=null){
 
 	    if ($name == null){

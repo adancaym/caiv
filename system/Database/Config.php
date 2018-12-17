@@ -129,22 +129,13 @@ class Config extends BaseConfig
 	 * Loads and returns an instance of the Forge for the specified
 	 * database group, and loads the group if it hasn't been loaded yet.
 	 *
-	 * @param string|array|null $group
+	 * @param string|null $group
 	 *
 	 * @return Forge
 	 */
-	public static function forge($group = null)
+	public static function forge(string $group = null)
 	{
-		// Allow custom connections to be sent in
-		if (is_array($group))
-		{
-			$config = $group;
-			$group  = 'custom-' . md5(json_encode($config));
-		}
-		else
-		{
-			$config = config('Database');
-		}
+		$config = new \Config\Database();
 
 		static::ensureFactory();
 
@@ -153,21 +144,14 @@ class Config extends BaseConfig
 			$group = ENVIRONMENT === 'testing' ? 'tests' : $config->defaultGroup;
 		}
 
-		if (is_string($group) && ! isset($config->$group) && ! is_array($config))
+		if (! isset($config->$group))
 		{
 			throw new \InvalidArgumentException($group . ' is not a valid database connection group.');
 		}
 
 		if (! isset(static::$instances[$group]))
 		{
-			if (is_array($config))
-			{
-				$db = static::connect($config);
-			}
-			else
-			{
-				$db = static::connect($group);
-			}
+			$db = static::connect($group);
 		}
 		else
 		{
@@ -188,39 +172,23 @@ class Config extends BaseConfig
 	 */
 	public static function utils(string $group = null)
 	{
-		// Allow custom connections to be sent in
-		if (is_array($group))
-		{
-			$config = $group;
-			$group  = 'custom-' . md5(json_encode($config));
-		}
-		else
-		{
-			$config = config('Database');
-		}
+		$config = new \Config\Database();
 
 		static::ensureFactory();
 
 		if (empty($group))
 		{
-			$group = ENVIRONMENT === 'testing' ? 'tests' : $config->defaultGroup;
+			$group = $config->defaultGroup;
 		}
 
-		if (is_string($group) && ! isset($config->$group) && ! is_array($config))
+		if (! isset($config->group))
 		{
 			throw new \InvalidArgumentException($group . ' is not a valid database connection group.');
 		}
 
 		if (! isset(static::$instances[$group]))
 		{
-			if (is_array($config))
-			{
-				$db = static::connect($config);
-			}
-			else
-			{
-				$db = static::connect($group);
-			}
+			$db = static::connect($group);
 		}
 		else
 		{

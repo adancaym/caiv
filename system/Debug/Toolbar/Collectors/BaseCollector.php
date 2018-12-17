@@ -255,9 +255,9 @@ class BaseCollector
 		{
 			$file = 'APPPATH/' . substr($file, strlen(APPPATH));
 		}
-		elseif (strpos($file, SYSTEMPATH) === 0)
+		elseif (strpos($file, BASEPATH) === 0)
 		{
-			$file = 'SYSTEMPATH/' . substr($file, strlen(SYSTEMPATH));
+			$file = 'BASEPATH/' . substr($file, strlen(BASEPATH));
 		}
 		elseif (strpos($file, FCPATH) === 0)
 		{

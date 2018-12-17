@@ -109,9 +109,6 @@ class Home extends Controller
     }
     public function saluda(){
 
-	    $entidad = new Usuario();
-
-	    $entidad->getArrayCuenta();
 
     }
 	//--------------------------------------------------------------------
