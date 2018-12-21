@@ -736,7 +736,7 @@ class Services extends BaseService
 
 		if (! is_object($config))
 		{
-			$config = config(\Config\Toolbar::class);
+			$config = config('Toolbar');
 		}
 
 		return new \CodeIgniter\Debug\Toolbar($config);
