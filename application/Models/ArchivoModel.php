@@ -70,10 +70,12 @@ class ArchivoModel extends Model
         ;
         $result =  $query->get() ;
         $rows =  $result->getResultObject();
-
         foreach ($rows as $entity){
-                $entity->url = 'preview?id='.$entity->id_archivo;
-
+            if (in_array($entity->type,$this->allowedFilesTypes)){
+                $entity->url = '#ver_archivo?id='.$entity->id_archivo.'&toFrame=true';
+            }else{
+                $entity->url = 'ver_archivo?id='.$entity->id_archivo.'&toFrame=false';
+            }
         }
         return $rows;
     }
