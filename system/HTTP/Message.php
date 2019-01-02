@@ -43,8 +43,25 @@ class Message
 
     protected $container = '.karym_main_container';
     protected $redirect = '';
-
     protected $dateTable ='';
+    protected $datosTable =array();
+
+    /**
+     * @return string
+     */
+    public function getDatosTable(): array
+    {
+        return $this->datosTable;
+    }
+
+    /**
+     * @param string $datosTable
+     */
+    public function setDatosTable(array $datosTable)
+    {
+        $this->datosTable = $datosTable;
+    }
+
     /**
      * @return string
      */
@@ -98,7 +115,7 @@ class Message
     }
     public function setTable($table)
     {
-       $this->dateTable = '#dateTable'.$table;
+       $this->dateTable = 'dateTable'.$table;
 
     }
 

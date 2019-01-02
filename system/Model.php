@@ -309,21 +309,7 @@ class Model
 	}
 
 
-    public function all($id_cuenta)
-    {
 
-        $this->builder = $this->db->table($this->table);
-
-        $query =
-            $this->builder->
-                select('*')
-                ->where('id_cuenta',$id_cuenta);
-
-        $result =  $query->get() ;
-        $rows =  $result->getResultObject();
-
-        return $rows;
-    }
 
 	//--------------------------------------------------------------------
 	//--------------------------------------------------------------------

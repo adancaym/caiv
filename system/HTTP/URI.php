@@ -934,6 +934,7 @@ class URI
 		// we can always have matching for Routes, etc.
 		$path = urldecode($path);
 
+
 		// Remove dot segments
 		$path = $this->removeDotSegments($path);
 
@@ -942,6 +943,7 @@ class URI
 		{
 			$path = '/' . $path;
 		}
+
 		if (strpos($orig, '../') === 0)
 		{
 			$path = '/' . $path;
