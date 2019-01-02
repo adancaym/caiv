@@ -43,5 +43,4 @@
         <?php } ?>
         </tbody>
     </table>
-    <?= $pager->links() ?>
 </div>

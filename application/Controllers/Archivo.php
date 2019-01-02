@@ -35,6 +35,7 @@ class Archivo extends Controller
 
         $this->response->sendJson();
     }
+
     public function guardar(){
         if($imagefile = $this->request->getFiles())
         {
@@ -116,6 +117,8 @@ class Archivo extends Controller
         header('Content-Length: '.$entidad->size);
         echo $entidad->blob;
     }
+
+
     public function ver(){
 
         $entidad = $this->model->find($this->request->getPostGet('id'));
@@ -196,17 +199,6 @@ class Archivo extends Controller
     }
     public function imagenes(){
 
-        $entities = $this->model->allImages($this->session->cuenta->id_cuenta);
-
-        $this->params['entidades'] = $entities;
-
-        $html = view('archivo/index/carousell',$this->params);
-
-        $this->response->appendBody($html);
-
-        $this->response->sendJson();
-    }
-    public function pdfs(){
         $entities = $this->model->allImages($this->session->cuenta->id_cuenta);
 
         $this->params['entidades'] = $entities;

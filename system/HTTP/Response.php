@@ -678,7 +678,6 @@ class Response extends Message implements ResponseInterface
                   'redirect' => $this->getRedirect(),
                   'menus' => $session->get('menus'),
                   'dateTable' => $this->getTable(),
-                  'datosTable' => $this->getDatosTable(),
                   'blob' => $this->getBlob(),
 
             )

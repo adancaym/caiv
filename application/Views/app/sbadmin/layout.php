@@ -75,7 +75,6 @@
 <script src="/assets/sb-admin-gh/vendor/bootstrap/js/bootstrap.js"></script>
 <script src="/assets/sb-admin-gh/js/sb-admin.js"></script>
 <script src="/assets/js/tools/bootbox.min.js"></script>
-<script src="/assets/js/tools/JSON-to-Table.min.1.0.0.js"></script>
 <script src="/assets/js/tools/jquery.jsonview.js"></script>
 <script src="/assets/sb-admin-gh/vendor/datatables/jquery.dataTables.js"></script>
 <script src="/assets/js/tools/datatables/dataTables.bootstrap4.js"></script>

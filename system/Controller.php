@@ -115,9 +115,7 @@ class Controller
     public function index()
     {
 
-        $this->setEntities($this->model->paginate(10),$this->model->headers,$this->model->fields);
-
-        $this->params['pager'] = $this->model->pager;
+        $this->setEntities($this->model->all($this->session->cuenta->id_cuenta),$this->model->headers,$this->model->fields);
 
         $html = view('app/index',$this->params);
 
@@ -125,7 +123,6 @@ class Controller
         $this->response->appendBody($html);
 
         $this->response->sendJson();
-
 
     }
 

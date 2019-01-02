@@ -79,17 +79,4 @@ class ArchivoModel extends Model
         }
         return $rows;
     }
-    public function allPdfs($id_cuenta)
-    {
-        $this->builder = $this->db->table('archivo');
-
-        $query = $this->builder->
-
-        select('archivo.*')
-            ->where('archivo.id_cuenta',$id_cuenta)
-            ->like('archivo.type','pdf');
-        $result =  $query->get() ;
-        $rows =  $result->getResultObject();
-        return $rows;
-    }
 }

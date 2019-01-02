@@ -403,9 +403,6 @@ karym = {
             karym.request.formFile($(form));
         },
         link:(element)=>{
-
-            event.preventDefault();
-
             var accion = $(element.target).data('action');
 
             if (typeof accion === 'undefined' ) {
