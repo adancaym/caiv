@@ -24,8 +24,6 @@ class SimpleConfig extends \CodeIgniter\Config\BaseConfig
 	public $delta   = 'four';
 	public $echo    = '';
 	public $foxtrot = 'false';
-	public $fruit   = 'pineapple';
-	public $dessert = '';
 	public $golf    = 18;
 	public $crew    = [
 		'captain' => 'Kirk',
@@ -34,6 +32,4 @@ class SimpleConfig extends \CodeIgniter\Config\BaseConfig
 		'comms'   => 'Uhuru',
 	];
 
-	public $shortie;
-	public $longie;
 }

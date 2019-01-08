@@ -111,7 +111,7 @@
 
 				<pre>
 				<code>
-					app/Views/welcome_message.php
+					application/Views/welcome_message.php
 				</code>
 				</pre>
 
@@ -119,7 +119,7 @@
 
 				<pre>
 				<code>
-					app/Controllers/Home.php
+					application/Controllers/Home.php
 				</code>
 				</pre>
 

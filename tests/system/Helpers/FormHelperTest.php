@@ -35,7 +35,7 @@ class FormHelperTest extends \CIUnitTestCase
 			$Name     = csrf_token();
 			$expected = <<<EOH
 <form action="http://example.com/index.php/foo/bar" name="form" id="form" method="POST" accept-charset="utf-8">
-<input type="hidden" name="$Name" value="$Value" style="display:none;" />
+<input type="hidden" name="$Name" value="$Value" style="display: none;" />
 
 EOH;
 		}
@@ -73,7 +73,7 @@ EOH;
 			$Name     = csrf_token();
 			$expected = <<<EOH
 <form action="http://example.com/" name="form" id="form" method="POST" accept-charset="utf-8">
-<input type="hidden" name="$Name" value="$Value" style="display:none;" />
+<input type="hidden" name="$Name" value="$Value" style="display: none;" />
 
 EOH;
 		}
@@ -110,7 +110,7 @@ EOH;
 			$Name     = csrf_token();
 			$expected = <<<EOH
 <form action="http://example.com/index.php/foo/bar" name="form" id="form" method="post" accept-charset="utf-8">
-<input type="hidden" name="$Name" value="$Value" style="display:none;" />
+<input type="hidden" name="$Name" value="$Value" style="display: none;" />
 
 EOH;
 		}
@@ -147,8 +147,8 @@ EOH;
 			$Name     = csrf_token();
 			$expected = <<<EOH
 <form action="http://example.com/index.php/foo/bar" name="form" id="form" method="POST" accept-charset="utf-8">
-<input type="hidden" name="foo" value="bar" style="display:none;" />
-<input type="hidden" name="$Name" value="$Value" style="display:none;" />
+<input type="hidden" name="foo" value="bar" style="display: none;" />
+<input type="hidden" name="$Name" value="$Value" style="display: none;" />
 
 EOH;
 		}
@@ -156,8 +156,7 @@ EOH;
 		{
 			$expected = <<<EOH
 <form action="http://example.com/index.php/foo/bar" name="form" id="form" method="POST" accept-charset="utf-8">
-
-<input type="hidden" name="foo" value="bar" style="display:none;" />
+<input type="hidden" name="foo" value="bar" style="display: none;" />
 
 EOH;
 		}
@@ -226,7 +225,7 @@ EOH;
 			$Name     = csrf_token();
 			$expected = <<<EOH
 <form action="http://example.com/index.php/foo/bar" name="form" id="form" method="POST" enctype="multipart&#x2F;form-data" accept-charset="utf-8">
-<input type="hidden" name="$Name" value="$Value" style="display:none;" />
+<input type="hidden" name="$Name" value="$Value" style="display: none;" />
 
 EOH;
 		}
@@ -254,7 +253,7 @@ EOH;
 	{
 		$expected = <<<EOH
 
-<input type="hidden" name="username" value="johndoe" style="display:none;" />\n
+<input type="hidden" name="username" value="johndoe" />\n
 EOH;
 		$this->assertEquals($expected, form_hidden('username', 'johndoe'));
 	}
@@ -267,7 +266,7 @@ EOH;
 		];
 		$expected = <<<EOH
 
-<input type="hidden" name="foo" value="bar" style="display:none;" />
+<input type="hidden" name="foo" value="bar" />
 
 EOH;
 		$this->assertEquals($expected, form_hidden($data, null));
@@ -281,7 +280,7 @@ EOH;
 		];
 		$expected = <<<EOH
 
-<input type="hidden" name="name[foo]" value="bar" style="display:none;" />
+<input type="hidden" name="name[foo]" value="bar" />
 
 EOH;
 		$this->assertEquals($expected, form_hidden('name', $data));

@@ -1,5 +1,4 @@
-<?php
-namespace CodeIgniter\Files;
+<?php namespace CodeIgniter\Files;
 
 /**
  * CodeIgniter
@@ -8,7 +7,7 @@ namespace CodeIgniter\Files;
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014-2019 British Columbia Institute of Technology
+ * Copyright (c) 2014-2018 British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +29,7 @@ namespace CodeIgniter\Files;
  *
  * @package    CodeIgniter
  * @author     CodeIgniter Dev Team
- * @copyright  2014-2019 British Columbia Institute of Technology (https://bcit.ca/)
+ * @copyright  2014-2018 British Columbia Institute of Technology (https://bcit.ca/)
  * @license    https://opensource.org/licenses/MIT	MIT License
  * @link       https://codeigniter.com
  * @since      Version 3.0.0
@@ -128,9 +127,17 @@ class File extends SplFileInfo
 	 */
 	public function getMimeType(): string
 	{
-		$finfo    = finfo_open(FILEINFO_MIME_TYPE);
-		$mimeType = finfo_file($finfo, $this->getRealPath());
-		finfo_close($finfo);
+		if (function_exists('finfo_file'))
+		{
+			$finfo    = finfo_open(FILEINFO_MIME_TYPE);
+			$mimeType = finfo_file($finfo, $this->getRealPath());
+			finfo_close($finfo);
+		}
+		else
+		{
+			$mimeType = mime_content_type($this->getRealPath());
+		}
+
 		return $mimeType;
 	}
 

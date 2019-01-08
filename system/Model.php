@@ -7,7 +7,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014-2019 British Columbia Institute of Technology
+ * Copyright (c) 2014-2018 British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  *
  * @package    CodeIgniter
  * @author     CodeIgniter Dev Team
- * @copyright  2014-2019 British Columbia Institute of Technology (https://bcit.ca/)
+ * @copyright  2014-2018 British Columbia Institute of Technology (https://bcit.ca/)
  * @license    https://opensource.org/licenses/MIT	MIT License
  * @link       https://codeigniter.com
  * @since      Version 3.0.0
@@ -314,10 +314,9 @@ class Model
 
         $this->builder = $this->db->table($this->table);
 
-        $query =
-            $this->builder->
-                select('*')
-                ->where('id_cuenta',$id_cuenta);
+
+
+        $query = $this->builder->select('*')->where('id_cuenta',$id_cuenta);
 
         $result =  $query->get() ;
         $rows =  $result->getResultObject();
@@ -325,7 +324,9 @@ class Model
         return $rows;
     }
 
-	//--------------------------------------------------------------------
+
+
+    //--------------------------------------------------------------------
 	//--------------------------------------------------------------------
 	// CRUD & FINDERS
 	//--------------------------------------------------------------------
@@ -442,7 +443,7 @@ class Model
 			$builder->where($this->deletedField, 0);
 		}
 
-		$row = $builder->limit($limit, $offset)
+		$row = $builder->limit($limit, $offset)->where('id_cuenta',$this->session->cuenta->id_cuenta)
 				->get();
 
 		$row = $row->getResult($this->tempReturnType);
@@ -1344,8 +1345,8 @@ class Model
 			// the value found in $data, if exists.
 			$rules = $this->fillPlaceholders($this->validationRules, $data);
 
-			$this->validation->setRules($rules, $this->validationMessages);
-			$valid = $this->validation->run($data, null, $this->DBGroup);
+			$this->validation->setRules($rules, $this->validationMessages, $this->DBGroup);
+			$valid = $this->validation->run($data);
 		}
 
 		return (bool) $valid;

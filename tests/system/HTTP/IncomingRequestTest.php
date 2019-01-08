@@ -381,12 +381,4 @@ class IncomingRequestTest extends \CIUnitTestCase
 		$this->assertEquals(124, $gotit->getSize());
 	}
 
-	//--------------------------------------------------------------------
-
-	public function testSpoofing()
-	{
-		$this->request->setMethod('WINK');
-		$this->assertEquals('wink', $this->request->getMethod());
-	}
-
 }

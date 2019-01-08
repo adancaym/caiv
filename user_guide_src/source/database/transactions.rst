@@ -75,15 +75,16 @@ debugging is turned off, you can manage your own errors like this::
 		// generate an error... or use the log_message() function to log your error
 	}
 
-Disabling Transactions
+Enabling Transactions
 =====================
 
-Transactions are enabled by default. If you would like to disable transactions you
+Transactions are enabled automatically the moment you use
+$this->db->transStart(). If you would like to disable transactions you
 can do so using $this->db->transOff()::
 
 	$this->db->transOff();
 
-	$this->db->transStart();
+	$this->db->trans_Start();
 	$this->db->query('AN SQL QUERY...');
 	$this->db->transComplete();
 

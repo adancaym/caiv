@@ -7,7 +7,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014-2019 British Columbia Institute of Technology
+ * Copyright (c) 2014-2018 British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  *
  * @package    CodeIgniter
  * @author     CodeIgniter Dev Team
- * @copyright  2014-2019 British Columbia Institute of Technology (https://bcit.ca/)
+ * @copyright  2014-2018 British Columbia Institute of Technology (https://bcit.ca/)
  * @license    https://opensource.org/licenses/MIT	MIT License
  * @link       https://codeigniter.com
  * @since      Version 3.0.0
@@ -95,10 +95,7 @@ if (! defined('TESTPATH'))
  * GRAB OUR CONSTANTS & COMMON
  * ---------------------------------------------------------------
  */
-if (! defined('APP_NAMESPACE'))
-{
-	require_once APPPATH . 'Config/Constants.php';
-}
+require_once APPPATH . 'Config/Constants.php';
 
 require_once BASEPATH . 'Common.php';
 
@@ -112,9 +109,9 @@ require_once BASEPATH . 'Common.php';
  * that the config files can use the path constants.
  */
 
-require_once SYSTEMPATH . 'Autoloader/Autoloader.php';
+require_once BASEPATH . 'Autoloader/Autoloader.php';
 require_once APPPATH . 'Config/Autoload.php';
-require_once SYSTEMPATH . 'Config/BaseService.php';
+require_once BASEPATH . 'Config/BaseService.php';
 require_once APPPATH . 'Config/Services.php';
 
 // Use Config\Services as CodeIgniter\Services

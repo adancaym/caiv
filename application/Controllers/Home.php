@@ -4,6 +4,7 @@ use App\Constants\UsuarioConstants;
 use App\Entities\Usuario;
 use App\Libraries\Periodo;
 use App\Models\AccionModel;
+use App\Models\GeneradorModel;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 use App\Models\CuentaModel;
@@ -109,8 +110,11 @@ class Home extends Controller
     }
     public function saluda(){
 
-
     }
 	//--------------------------------------------------------------------
+    public function mapping(){
+
+
+    }
 
 }
